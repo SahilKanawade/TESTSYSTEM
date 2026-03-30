@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>MCQ Exam System</title>
+
+<style>
+body {
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+    background: #eef2f7;
+}
+
+/* HEADER */
+header {
+    background: #1e293b;
+    color: white;
+    padding: 15px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+header h1 {
+    margin: 0;
+    font-size: 20px;
+}
+
+.progress {
+    width: 200px;
+    height: 10px;
+    background: #334155;
+    border-radius: 10px;
+}
+
+.progress-bar {
+    height: 100%;
+    width: 0%;
+    background: #22c55e;
+    border-radius: 10px;
+}
+
+/* CONTAINER */
+.container {
+    width: 85%;
+    margin: auto;
+    margin-top: 20px;
+}
+
+/* CARD */
+.card {
+    background: white;
+    padding: 18px;
+    margin-bottom: 15px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0,0,0,0.08);
+}
+
+.card h3 {
+    margin-bottom: 10px;
+}
+
+/* OPTIONS */
+.option {
+    display: block;
+    padding: 10px;
+    margin: 6px 0;
+    border-radius: 6px;
+    background: #f1f5f9;
+    cursor: pointer;
+}
+
+.option:hover {
+    background: #e2e8f0;
+}
+
+/* BUTTON */
+.submit-btn {
+    display: block;
+    margin: 30px auto;
+    padding: 12px 30px;
+    font-size: 16px;
+    background: #2563eb;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.submit-btn:hover {
+    background: #1d4ed8;
+}
+
+/* RESULT */
+#result {
+    width: 85%;
+    margin: auto;
+    margin-top: 20px;
+    padding: 20px;
+    background: white;
+    border-radius: 10px;
+}
+
+.wrong { color: red; }
+.correct { color: green; }
+
+/* FOOTER */
+footer {
+    text-align: center;
+    padding: 15px;
+    background: #1e293b;
+    color: white;
+    margin-top: 30px;
+}
+</style>
+
+</head>
+<body>
+
+<header>
+    <h1>📘 MCQ Exam ANDROID PROGRAMMING</h1>
+    <div class="progress">
+        <div class="progress-bar" id="progressBar"></div>
+    </div>
+</header>
+
+<div class="container" id="quiz"></div>
+
+<button class="submit-btn" onclick="submitTest()">Submit Test</button>
+
+<div id="result"></div>
+
+<footer>
+    © HACKERS LOBBY SK | PHOD KE AAYENGE 
+</footer>
+
+<script>
+
+// ✅ ALL 80 QUESTIONS EXACT
+const questions = [
+{q:`You created an app, but when you click a button, nothing happens. You forgot to link the button with code. What is missing?`,options:["Intent","OnClickListener","Fragment","Service"],answer:1},
+{q:`An app crashes immediately after launch due to a missing permission for internet. Where should you declare it?`,options:["activity_main.xml","build.gradle","AndroidManifest.xml","strings.xml"],answer:2},
+{q:`You want to pass data from one Activity to another. What should you use?`,options:["Fragment","Intent","Service","View"],answer:1},
+{q:`Your app freezes when performing a long operation on the main thread. What is the issue?`,options:["Memory leak","ANR","Syntax error","API error"],answer:1},
+{q:`You want to display a list of 1000 items efficiently. What should you use?`,options:["TextView","LinearLayout","RecyclerView","ScrollView"],answer:2},
+{q:`Your app needs to run music in the background even after the app is closed. Which component should be used?`,options:["Activity","Fragment","Service","Intent"],answer:2},
+{q:`You want to show a short popup message when a user clicks a button. What should you use?`,options:["AlertDialog","Toast","Notification","Snackbar"],answer:1},
+{q:`You need to store structured data locally in your app. What is the best option?`,options:["SharedPreferences","SQLite","Intent","Service"],answer:1},
+{q:`You want your UI to adapt to different screen sizes using constraints. Which layout is best?`,options:["LinearLayout","FrameLayout","ConstraintLayout","TableLayout"],answer:2},
+{q:`You want to update UI automatically when data changes. Which component helps?`,options:["View","LiveData","Intent","Service"],answer:1},
+
+{q:`Your app should respond when the device battery is low. Which component should you use?`,options:["Activity","Broadcast Receiver","Service","Fragment"],answer:1},
+{q:`You want to connect your app to a REST API. Which library is commonly used?`,options:["Glide","Retrofit","Room","Picasso"],answer:1},
+{q:`You want to design UI without writing XML. Which modern toolkit should you use?`,options:["Jetpack Compose","RecyclerView","ConstraintLayout","Fragment"],answer:0},
+{q:`An app needs to save small key-value pairs like login status. What should be used?`,options:["SQLite","SharedPreferences","Room","Intent"],answer:1},
+{q:`Your app crashes due to null reference when accessing a view. What is the issue?`,options:["Memory leak","NullPointerException","ANR","API error"],answer:1},
+{q:`You want to reuse a UI component in multiple activities. What should you use?`,options:["Service","Fragment","Intent","BroadcastReceiver"],answer:1},
+{q:`Your app needs to load images from the internet efficiently. Which library can help?`,options:["Retrofit","Glide","Room","LiveData"],answer:1},
+{q:`You want navigation between screens with back stack support. What should you use?`,options:["Intent only","Navigation Component","FragmentManager","Service"],answer:1},
+{q:`You need to perform background work without blocking UI. What should you use?`,options:["Activity","Main thread","AsyncTask / Coroutine","Layout"],answer:2},
+{q:`You want to debug your app and see logs. Which tool will you use in Android Studio?`,options:["Emulator","Logcat","Gradle","ADB"],answer:1},
+
+{q:`Your app must access the camera. What is required first?`,options:["Layout file","Permission in Manifest","Intent","Service"],answer:1},
+{q:`You want to display a dialog box asking user confirmation. What should you use?`,options:["Toast","AlertDialog","Intent","Service"],answer:1},
+{q:`Your app UI overlaps elements accidentally. Which layout may cause this?`,options:["LinearLayout","FrameLayout","ConstraintLayout","GridLayout"],answer:1},
+{q:`You want to bind UI components safely without findViewById(). What should you use?`,options:["ViewBinding","Intent","Service","Fragment"],answer:0},
+{q:`You want your app to work offline and sync later. Which approach is best?`,options:["Only API calls","Local DB + Sync","Only UI","Intent"],answer:1},
+{q:`Your app crashes due to heavy memory usage. What is the issue?`,options:["ANR","Memory leak","Syntax error","Intent error"],answer:1},
+{q:`You want to schedule a task even if app is closed. What should you use?`,options:["Activity","Service","WorkManager","Fragment"],answer:2},
+{q:`User rotates the screen and data is lost. What should be used?`,options:["Intent","ViewModel","Service","Layout"],answer:1},
+{q:`You want to show temporary message with action button. What should you use?`,options:["Toast","Snackbar","Dialog","Notification"],answer:1},
+{q:`You want to test app on different devices without real phones. What should you use?`,options:["SDK","Emulator","APK","Gradle"],answer:1},
+
+{q:`You updated a layout XML file, but changes are not reflecting in the app. What should you do first?`,options:["Restart device","Clean & Rebuild project","Delete code","Change Activity"],answer:1},
+{q:`Your app needs to open a web page when a button is clicked. What should you use?`,options:["Service","Intent with ACTION_VIEW","Fragment","BroadcastReceiver"],answer:1},
+{q:`You want to store images inside the app package. Which folder should you use?`,options:["assets","res/drawable","libs","src"],answer:1},
+{q:`Your app crashes due to missing UI element ID. What is likely the problem?`,options:["Wrong API level","Incorrect ID reference","Gradle issue","Emulator issue"],answer:1},
+{q:`You want to make an API call only when internet is available. What should you check?`,options:["Battery status","Network connectivity","Screen size","Storage"],answer:1},
+{q:`Your app needs to share text to other apps like WhatsApp. What should you use?`,options:["Fragment","Explicit Intent","Implicit Intent","Service"],answer:2},
+{q:`You want to keep user logged in even after app restart. What should you use?`,options:["SQLite","SharedPreferences","Intent","Service"],answer:1},
+{q:`Your app UI is slow due to deeply nested layouts. What is the solution?`,options:["Add more views","Use ConstraintLayout","Use FrameLayout","Use ScrollView"],answer:1},
+{q:`You want to update UI from background thread. What should you use?`,options:["Direct update","Handler / runOnUiThread","Service","Intent"],answer:1},
+{q:`Your app must download a file in background and notify user. What should you use?`,options:["Activity","Service + Notification","Fragment","Layout"],answer:1},
+
+{q:`You want to reduce APK size. What should you do?`,options:["Add more libraries","Enable ProGuard / R8","Increase images","Use more layouts"],answer:1},
+{q:`Your app crashes when rotating screen due to recreation. What is happening?`,options:["Activity restart","API crash","Memory leak","Intent failure"],answer:0},
+{q:`You want to handle button click in XML directly. Which attribute is used?`,options:["android:id","android:onClick","android:text","android:layout"],answer:1},
+{q:`Your app needs to upload files to server. Which library is suitable?`,options:["Glide","Retrofit","Room","LiveData"],answer:1},
+{q:`You want to support multiple languages in your app. What should you use?`,options:["Different Activities","strings.xml localization","Layout file","Manifest"],answer:1},
+{q:`Your app needs to access user location. What is required?`,options:["UI change","Location permission","Fragment","Intent"],answer:1},
+{q:`You want to observe lifecycle changes of activity. What should you use?`,options:["Service","LifecycleObserver","Intent","Layout"],answer:1},
+{q:`Your app is not installing due to version conflict. What should you update?`,options:["Layout","versionCode / versionName","Activity","Fragment"],answer:1},
+{q:`You want to animate a button click. What should you use?`,options:["Animation API","Intent","Service","Database"],answer:0},
+{q:`You want to monitor app performance issues. Which tool inside Android Studio helps?`,options:["Logcat","Profiler","Emulator","SDK Manager"],answer:1},
+
+{q:`What is an application (app)?`,options:["A hardware device","A software program designed to perform tasks","A programming language","A database"],answer:1},
+{q:`Which language is commonly used for Android app development?`,options:["Python","Java","C++","PHP"],answer:1},
+{q:`What is the main function of an IDE?`,options:["To store data","To design hardware","To write and test code","To manage networks"],answer:2},
+{q:`Which IDE is commonly used for Android development?`,options:["Eclipse","Android Studio","NetBeans","Visual Studio Code"],answer:1},
+{q:`What does APK stand for?`,options:["Android Program Kit","Android Package Kit","Application Program Key","Android Phone Kit"],answer:1},
+{q:`What is UI in app development?`,options:["User Interface","Universal Internet","User Input","Utility Interface"],answer:0},
+{q:`What is UX?`,options:["User XML","User Experience","User Execution","Universal Experience"],answer:1},
+{q:`Which component is used to design layouts in Android?`,options:["Java","XML","HTML","SQL"],answer:1},
+{q:`What is an Activity in Android?`,options:["A database","A single screen in an app","A file manager","A network tool"],answer:1},
+{q:`What is a Fragment?`,options:["A type of database","A UI component representing part of a screen","A programming language","A hardware unit"],answer:1},
+
+{q:`Which file contains app configuration details?`,options:["MainActivity.java","AndroidManifest.xml","layout.xml","strings.xml"],answer:1},
+{q:`What is a View in Android?`,options:["A database","A UI element","A server","A file"],answer:1},
+{q:`Which layout arranges elements in a single column or row?`,options:["RelativeLayout","LinearLayout","FrameLayout","GridLayout"],answer:1},
+{q:`What is the purpose of a Button?`,options:["To display images","To take user input","To trigger actions","To store data"],answer:2},
+{q:`What is an Emulator?`,options:["A real device","A virtual device for testing apps","A programming tool","A database"],answer:1},
+{q:`What is debugging?`,options:["Writing code","Finding and fixing errors","Compiling code","Designing UI"],answer:1},
+{q:`What is SDK?`,options:["Software Development Kit","System Development Key","Software Design Kit","System Data Kit"],answer:0},
+{q:`What is API?`,options:["Application Programming Interface","App Process Integration","Android Program Interface","Application Process Input"],answer:0},
+{q:`Which component handles background tasks in Android?`,options:["Activity","Service","Fragment","View"],answer:1},
+{q:`What is a Toast message?`,options:["A type of layout","A short message displayed on screen","A database entry","A button type"],answer:1},
+
+{q:`What is Gradle used for?`,options:["UI design","Build automation","Database management","Networking"],answer:1},
+{q:`Which file stores text values in Android?`,options:["colors.xml","strings.xml","styles.xml","manifest.xml"],answer:1},
+{q:`What is intent in Android?`,options:["A database","A messaging object for communication between components","A UI layout","A file format"],answer:1},
+{q:`What is the purpose of RecyclerView?`,options:["Store data","Display lists efficiently","Connect database","Manage files"],answer:1},
+{q:`What is a permission in Android?`,options:["UI element","Access control for app features","Layout file","Programming language"],answer:1},
+{q:`What is version control?`,options:["Managing UI","Tracking code changes","Designing apps","Debugging code"],answer:1},
+{q:`Which tool is used for version control?`,options:["Git","Java","XML","SQLite"],answer:0},
+{q:`What is SQLite?`,options:["Programming language","Lightweight database","UI tool","API"],answer:1},
+{q:`What is responsive design?`,options:["Fast coding","Adapting UI to different screen sizes","Debugging code","Storing data"],answer:1},
+{q:`What is publishing an app?`,options:["Writing code","Testing app","Uploading app to app store","Debugging"],answer:2}
+];
+
+// LOAD QUESTIONS
+const quiz = document.getElementById("quiz");
+
+questions.forEach((q,index)=>{
+    let html = `<div class="card">
+    <h3>Q${index+1}. ${q.q}</h3>`;
+
+    q.options.forEach((opt,i)=>{
+        html += `
+        <label class="option">
+        <input type="radio" name="q${index}" value="${i}" onchange="updateProgress()">
+        ${opt}
+        </label>`;
+    });
+
+    html += `</div>`;
+    quiz.innerHTML += html;
+});
+
+// PROGRESS BAR
+function updateProgress(){
+    let answered = document.querySelectorAll("input[type=radio]:checked").length;
+    let percent = (answered / questions.length) * 100;
+    document.getElementById("progressBar").style.width = percent + "%";
+}
+
+// SUBMIT
+function submitTest(){
+    let score = 0;
+    let wrongHTML = "";
+
+    questions.forEach((q,index)=>{
+        let selected = document.querySelector(`input[name="q${index}"]:checked`);
+        let ans = selected ? parseInt(selected.value) : -1;
+
+        if(ans === q.answer){
+            score++;
+        } else {
+            wrongHTML += `
+            <p class="wrong"><b>Q${index+1}:</b> ${q.q}</p>
+            <p>Your Answer: ${ans==-1?"Not Attempted":q.options[ans]}</p>
+            <p class="correct">Correct Answer: ${q.options[q.answer]}</p>
+            <hr>`;
+        }
+    });
+
+    document.getElementById("result").innerHTML =
+    `<h2>🎯 Score: ${score} / ${questions.length}</h2>
+     <h3>❌ Wrong Answers</h3>
+     ${wrongHTML}`;
+}
+
+</script>
+
+</body>
+</html>
